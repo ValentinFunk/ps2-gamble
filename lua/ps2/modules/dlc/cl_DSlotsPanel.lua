@@ -90,25 +90,22 @@ function PANEL:Init( )
 	function self.betPanel:Paint( )
 	end
 	
-	local amounts = {
-		10,
-		50,
-		100,
-		1000
-	}
-	
+	self.amountBtns = {}
 	for i = 1, 4 do
 		local btn = vgui.Create( "DButton", self.betPanel )
 		btn:Dock( TOP )
 		btn:SetTall( 30 )
 		btn:DockMargin( 5, 5, 5, 5 )
-		btn:SetText( amounts[i] .. " points" )
+		btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
+		hook.Add( "PS2_OnSettingsUpdate", btn, function( btn )
+			btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
+		end )
 		function btn.DoClick( )
-			self.Bet = amounts[i]
+			self.Bet = Pointshop2.Gambling.BetAmounts[i]
 			self:OnBetChanged( )
 		end
 		function btn:Think( )
-			btn:SetDisabled( LocalPlayer().PS2_Wallet.points < amounts[i] )
+			btn:SetDisabled( LocalPlayer().PS2_Wallet.points < Pointshop2.Gambling.BetAmounts[i] )
 		end
 	end
 	
@@ -154,6 +151,10 @@ function PANEL:StartSpin( )
 		timer.Simple( 1.8, function( )
 			if IsValid( self ) then
 				if didWin then
+					if not Pointshop2.GetSetting( "Pointshop 2 DLC", "GamblingSettings.GlobalSound" ) then
+						LocalPlayer():EmitSound( "slots_win.wav" )
+					end
+					
 					self.wonLabel:SetVisible( true )
 					self.wonLabel:SetText( "YOU WON " .. winAmount .. " POINTS!" )
 				end

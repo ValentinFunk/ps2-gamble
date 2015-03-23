@@ -45,7 +45,9 @@ function Pointshop2.GamblingController:startSpin( ply, bet )
 	if won then
 		timer.Simple( 1.5, function( )
 			if not IsValid( ply ) then return end
-			ply:EmitSound( "slots_win.wav", 140, 100 )
+			if Pointshop2.GetSetting( "Pointshop 2 DLC", "GamblingSettings.GlobalSound" ) then
+				ply:EmitSound( "slots_win.wav" )
+			end
 			ply:PS2_AddStandardPoints( amountWon, "Gambling Earnings" )
 		end )
 	end
