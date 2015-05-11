@@ -19,7 +19,6 @@ Pointshop2.Gambling.images = {
 }
 
 function Pointshop2.Gambling:GetItemNumberForChance( chance )
-	do return 1 end
 	if chance <= 2 then
 		return 6
 	elseif chance <= 5 then
@@ -79,4 +78,10 @@ hook.Add( "PS2_ModulesLoaded", "DLC_GAMBLE", function( )
 		icon = "pointshop2/small43.png",
 		control = "DPointshop2GamblingConfigurator"
 	} )
+end )
+
+hook.Add( "PS2_PopulateCredits", "AddGambleCreds", function( panel )
+	panel:AddCreditSection( "Pointshop 2 Gamble", [[
+Pointshop 2 Gamble by Kamshak.
+	]] )
 end )
