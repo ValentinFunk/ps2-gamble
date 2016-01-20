@@ -37,20 +37,23 @@ local CUR = "PTS "
 
 function PANEL:Init( )
 	self:SetSkin( Pointshop2.Config.DermaSkin )
-	
+
 	self.rowContainer = vgui.Create( "DPanel", self )
 	self.rowContainer:Dock( TOP )
 	self.rowContainer:SetTall( 64 * 3 + 30 )
 	function self.rowContainer:Paint( w, h )
 		surface.SetDrawColor( self:GetSkin( ).ButtonColor )
 		surface.DrawRect( 0, 0, w, h )
+
+    surface.SetDrawColor( self:GetSkin( ).Highlight )
+    surface.DrawRect( 0, 64 + 10, w, 64 + 10 )
 	end
 
 	function self.rowContainer:PerformLayout( )
 		self:SizeToChildren( true, false )
 		--self:SetWide( self:GetWide( ) + 5 )
 	end
-	
+
 	self.rows = {}
 	for i = 1, 3 do
 		local idx = i - 1
@@ -59,7 +62,7 @@ function PANEL:Init( )
 		row:DockMargin( 5, 5, 5, 5 )
 		self.rows[i] = row
 	end
-	
+
 	self.wonLabel = vgui.Create( "DLabel", self )
 	self.wonLabel:SetText( "YOU WON 1000 POINTS!"  )
 	self.wonLabel:SetFont( self:GetSkin( ).SmallTitleFont )
@@ -72,7 +75,7 @@ function PANEL:Init( )
 	end
 	self.wonLabel:SetContentAlignment( 5 )
 	self.wonLabel:SetVisible( false )
-	
+
 	local label = vgui.Create( "DLabel", self )
 	label:SetText( "Select Bet" )
 	label:SetFont( self:GetSkin( ).SmallTitleFont )
@@ -80,7 +83,7 @@ function PANEL:Init( )
 	label:Dock( TOP )
 	label:DockMargin( 0, 5, 0, 5 )
 	label:SetColor( color_white )
-	
+
 	self.betPanel = vgui.Create( "DPanel", self )
 	self.betPanel:Dock( TOP )
 	function self.betPanel:PerformLayout( )
@@ -89,7 +92,7 @@ function PANEL:Init( )
 	end
 	function self.betPanel:Paint( )
 	end
-	
+
 	self.amountBtns = {}
 	for i = 1, 4 do
 		local btn = vgui.Create( "DButton", self.betPanel )
@@ -108,7 +111,7 @@ function PANEL:Init( )
 			btn:SetDisabled( LocalPlayer().PS2_Wallet.points < Pointshop2.Gambling.BetAmounts[i] )
 		end
 	end
-	
+
 	self.betLabel = vgui.Create( "DLabel", self )
 	self.betLabel:SetText( "Bet :" )
 	self.betLabel:SetFont( self:GetSkin( ).SmallTitleFont )
@@ -116,8 +119,8 @@ function PANEL:Init( )
 	self.betLabel:Dock( TOP )
 	self.betLabel:DockMargin( 0, 5, 0, 5 )
 	self.betLabel:SetColor( color_white )
-	
-	self.go = vgui.Create( "DButton", self ) 
+
+	self.go = vgui.Create( "DButton", self )
 	self.go:Dock( TOP )
 	self.go:SetText( "Spin" )
 	self.go:SetTall( 75 )
@@ -131,7 +134,7 @@ function PANEL:Init( )
 	function self.go.DoClick( )
 		self:StartSpin( )
 	end
-	
+
 	self.Bet = 10
 	self:OnBetChanged( )
 end
@@ -139,7 +142,7 @@ end
 function PANEL:StartSpin( )
 	Pointshop2.GamblingView:getInstance( ):startSpin( self.Bet )
 	:Done( function( seeds, didWin, winAmount )
-		if not IsValid( self ) then return end 
+		if not IsValid( self ) then return end
 		self.wonLabel:SetVisible( false )
 		self.Spinning = true
 		for i = 1, 3 do
@@ -154,7 +157,7 @@ function PANEL:StartSpin( )
 					if not Pointshop2.GetSetting( "Pointshop 2 DLC", "GamblingSettings.GlobalSound" ) then
 						LocalPlayer():EmitSound( "slots_win.wav" )
 					end
-					
+
 					self.wonLabel:SetVisible( true )
 					self.wonLabel:SetText( "YOU WON " .. winAmount .. " POINTS!" )
 				end
@@ -163,8 +166,8 @@ function PANEL:StartSpin( )
 		end )
 	end )
 	:Fail( function( err )
-		if not IsValid( self ) then return end 
-		
+		if not IsValid( self ) then return end
+
 		self.Spinning = false
 		Derma_Message( err, "Error" )
 	end )

@@ -4,13 +4,13 @@ function PANEL:Init( )
 	self.itemQueue = { }
 	self.displayItems = { }
 	self.scrollOffset = 0
-	
+
 	self.isSpinning = false
 	self.lockedElement = 0 --element to lock to
 	self.index = index --self.strip number(1-3)
 	self.elementsPoped = 0 --number of elements removed from the random list
-	
-	
+
+
 	--init, seeds are just time, actual seeds are sent when spinning
 	self:generateRandomQueue( math.random( 1, 1000000000000000000000 ) )
 	for i = 1, 4 do
@@ -52,12 +52,12 @@ function PANEL:createNextImage( )
 end
 
 function PANEL:Think( )
-	if self.isSpinning then 
+	if self.isSpinning then
 		self.scrollOffset = self.scrollOffset + 1500 * FrameTime( )
 		if self.scrollOffset >= 64 then --last item scrolled out, insert new
 			local old = table.remove( self.displayItems )
 			old:Remove( )
-			
+
 			table.insert( self.displayItems, 1, self:createNextImage( ) )
 			self.scrollOffset = 0
 			if self.elementsPoped == self.lockedElement then
@@ -65,10 +65,10 @@ function PANEL:Think( )
 			end
 		end
 	end
-	
+
 	for k, v in pairs( self.displayItems ) do
 		local idx = k - 1
-		local yPos = -64 + idx * 64 + self.scrollOffset 
+		local yPos = -64 + idx * 64 + self.scrollOffset
 		if idx > 1 then
 			yPos = yPos + 10 * ( idx - 1 )
 		end
