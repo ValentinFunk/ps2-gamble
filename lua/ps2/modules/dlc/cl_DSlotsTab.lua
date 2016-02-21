@@ -31,14 +31,14 @@ function PANEL:Init( )
 	self.right.label:Dock( TOP )
 	self.right.label:DockMargin( 0, 0, 0, 5 )
 
-	self.rewardsPanel = vgui.Create( "DPanel", self.right )
+	self.rewardsPanel = vgui.Create( "DScrollPanel", self.right ) -- Set to scroll panel
 	self.rewardsPanel:DockMargin( 5, 5, 5, 5 )
-	self.rewardsPanel:Dock( TOP )
+	self.rewardsPanel:Dock( FILL )
 	self.rewardsPanel:DockPadding( 5, 5, 5, 5 )
-	self.rewardsPanel:SetTall( 50 * 8 + 20 )
+--	self.rewardsPanel:SetTall( 50 * 8 + 30 ) -- Drawing it in the rect below
 	function self.rewardsPanel:Paint( w, h )
 		surface.SetDrawColor( self:GetSkin( ).ButtonColor )
-		surface.DrawRect( 0, 0, w, h )
+		surface.DrawRect( 0, 0, w, 50 * 8 + 30 ) -- Changed the height for the scroll panel
 	end
 	self:InitRewardsPanel( )
 end
@@ -51,7 +51,7 @@ function PANEL:InitRewardsPanel( )
 			draw.RoundedBox( 2, 0, 0, w, h, Color( 60, 60, 60 ) )
 		end
 		panel:Dock( TOP )
-		panel:DockMargin( 5, 5, 5, 5 )
+		panel:DockMargin( 10, 10, 10, 0 )
 
 		local pnl = vgui.Create( "DPanel", panel )
 		pnl.Paint = function( ) end
@@ -84,12 +84,12 @@ function PANEL:InitRewardsPanel( )
 	end
 
 	local panel = vgui.Create( "DPanel", self.rewardsPanel )
-	panel:SetSize( 100, 50 )
+	panel:SetSize( 100, 60 ) -- Had to change height so that it would look nice in the scroll panel
 	function panel:Paint( w, h )
-		draw.RoundedBox( 2, 0, 0, w, h, Color( 60, 60, 60 ) )
+		draw.RoundedBox( 2, 0, 0, w, h-10, Color( 60, 60, 60 ) ) -- Of course -10 pixels because we made it 10 more above
 	end
 	panel:Dock( TOP )
-	panel:DockMargin( 5, 5, 5, 5 )
+	panel:DockMargin( 10, 10, 10, 10 ) -- make it look like all other panels
 
 	local pnl = vgui.Create( "DPanel", panel )
 	pnl.Paint = function( ) end
@@ -101,7 +101,7 @@ function PANEL:InitRewardsPanel( )
 	image:SetImage( "pointshop2/info20.png" )
 	image:SetSize( 32, 32 )
 	function pnl.PerformLayout( )
-		image:SetPos( ( pnl:GetWide( ) - image:GetWide( ) ) / 2, ( pnl:GetTall( ) - image:GetTall( ) ) / 2, 0, 0 )
+		image:SetPos( ( pnl:GetWide( ) - image:GetWide( ) ) / 2, (( pnl:GetTall( ) - image:GetTall( ) ) - 10) / 2, 0, 0 ) -- Had to change the pos of this to align correctly since we add 10 height
 	end
 	local oldP = image.Paint
 	function image:Paint( w, h )
@@ -110,10 +110,10 @@ function PANEL:InitRewardsPanel( )
 	end
 
 	local label = vgui.Create( "DLabel", panel )
-	label:SetText( "Align three of the same symbols in the \ncenter row to win!" )
+	label:SetText( "Align three of the same symbols in \nthe center row to win!" ) -- moved the \n over a word because it was butchering "the" lol
 	label:SetColor( Color( 255, 255, 255, 255 ) )
 	label:DockMargin( 5, 0, 0, 0 )
-	label:Dock( FILL )
+	label:SetPos( 32 + 20, 5 ) -- Centered this just right
 	label:SetFont( self:GetSkin().fontName )
 	label:SetColor( self:GetSkin().Colours.Label.Bright )
 	label:SizeToContents( )

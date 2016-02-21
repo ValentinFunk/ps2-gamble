@@ -51,7 +51,7 @@ function PANEL:Init( )
 
 	function self.rowContainer:PerformLayout( )
 		self:SizeToChildren( true, false )
-		--self:SetWide( self:GetWide( ) + 5 )
+		self:SetWide( self:GetWide( ) + 5 ) -- Had to uncomment to fix butchering
 	end
 
 	self.rows = {}
@@ -76,29 +76,16 @@ function PANEL:Init( )
 	self.wonLabel:SetContentAlignment( 5 )
 	self.wonLabel:SetVisible( false )
 
-	local label = vgui.Create( "DLabel", self )
-	label:SetText( "Select Bet" )
-	label:SetFont( self:GetSkin( ).SmallTitleFont )
-	label:SizeToContents( )
-	label:Dock( TOP )
-	label:DockMargin( 0, 5, 0, 5 )
-	label:SetColor( color_white )
-
-	self.betPanel = vgui.Create( "DPanel", self )
-	self.betPanel:Dock( TOP )
-	function self.betPanel:PerformLayout( )
-		self:SizeToChildren( false, true )
-		self:SetTall( self:GetTall( ) + 5 )
-	end
-	function self.betPanel:Paint( )
-	end
+	self.betPanel = vgui.Create( "DScrollPanel", self ) --Set to scroll
+	self.betPanel:Dock( FILL ) -- Place this at the bottom of the panel
+	self.betPanel:DockMargin( 5, 5, 5, 5 )
 
 	self.amountBtns = {}
 	for i = 1, 4 do
 		local btn = vgui.Create( "DButton", self.betPanel )
 		btn:Dock( TOP )
 		btn:SetTall( 30 )
-		btn:DockMargin( 5, 5, 5, 5 )
+		btn:DockMargin( 5, 0, 5, 5 ) -- Lowered the margin for these buttons a bit to work/look better on lower resolutions
 		btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
 		hook.Add( "PS2_OnSettingsUpdate", btn, function( btn )
 			btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
@@ -123,7 +110,7 @@ function PANEL:Init( )
 	self.go = vgui.Create( "DButton", self )
 	self.go:Dock( TOP )
 	self.go:SetText( "Spin" )
-	self.go:SetTall( 75 )
+	self.go:SetTall( 40 ) -- 75 was a bit much lol
 	function self.go:Think( )
 		if self:GetParent( ).Spinning or self.Bet == 0 or LocalPlayer().PS2_Wallet.points < self:GetParent().Bet then
 			self:SetDisabled( true )
@@ -134,6 +121,14 @@ function PANEL:Init( )
 	function self.go.DoClick( )
 		self:StartSpin( )
 	end
+
+	local label = vgui.Create( "DLabel", self )
+	label:SetText( "Select Bet" )
+	label:SetFont( self:GetSkin( ).SmallTitleFont )
+	label:SizeToContents( )
+	label:Dock( TOP )
+	label:DockMargin( 0, 5, 0, 0 )
+	label:SetColor( color_white )
 
 	self.Bet = 10
 	self:OnBetChanged( )
@@ -179,7 +174,7 @@ end
 
 function PANEL:PerformLayout( )
 	self.rowContainer:PerformLayout( )
-	self.rowContainer:DockMargin( ( self:GetWide( ) - self.rowContainer:GetWide( ) ) / 2, 0, ( self:GetWide( ) - self.rowContainer:GetWide( ) ) / 2 - 5, 0 )
+	self.rowContainer:DockMargin( ( self:GetWide( ) - self.rowContainer:GetWide( ) ) / 2, 0, ( self:GetWide( ) - self.rowContainer:GetWide( ) ) / 2 + 5, 0 )
 end
 
 function PANEL:GetBet( )
