@@ -35,7 +35,7 @@ function Pointshop2.GamblingController:spinLogic( bet )
 	end
 	local amountWon = bet * Pointshop2.Gambling.WinMultiplier[winNumber]
 
-	return won and amountWon
+	return randomseeds, won and amountWon
 end
 
 function Pointshop2.GamblingController:simulateSpinning( )
@@ -58,7 +58,7 @@ function Pointshop2.GamblingController:startSpin( ply, bet )
 		return Promise.Reject( "You cannot afford this!" )
 	end
 
-    if not table.HasValue( Gambling.BetAmounts, bet ) then
+    if not table.HasValue( Pointshop2.Gambling.BetAmounts, bet ) then
         return Promise.Reject( "Invalid Bet" )
     end
 
@@ -71,7 +71,7 @@ function Pointshop2.GamblingController:startSpin( ply, bet )
 	ply:PS2_AddStandardPoints( -bet, "Gambling" )
 
 
-	local amountWon = self:spinLogic( bet )
+	local randomseeds, amountWon = self:spinLogic( bet )
 	if amountWon then
 		timer.Simple( 1.5, function( )
 			if not IsValid( ply ) then return end

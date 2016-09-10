@@ -56,14 +56,14 @@ end
 
 hook.Add( "PS2_ModulesLoaded", "DLC_GAMBLE", function( )
 	local MODULE = Pointshop2.GetModule( "Pointshop 2 DLC" )
-	
+
 	MODULE.Settings.Shared.GamblingSettings = {
 		info = {
 			label = "Gambling Settings"
 		},
 		BetMultiplier = {
 			tooltip = "Use this to manipulate the bet prices. Multiplier of 1 means standard bets, 0.5 means half the amount, 2 double etc.",
-			label = "Bet Multiplier", 
+			label = "Bet Multiplier",
 			value = 1
 		},
 		GlobalSound = {
@@ -72,7 +72,7 @@ hook.Add( "PS2_ModulesLoaded", "DLC_GAMBLE", function( )
 			tooltip = "Whether or not to play the win sound from the player so that nearby players can hear it"
 		},
 	}
-	
+
 	table.insert( MODULE.SettingButtons, {
 		label = "Gambling Settings",
 		icon = "pointshop2/small43.png",
