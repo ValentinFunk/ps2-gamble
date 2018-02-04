@@ -81,23 +81,30 @@ function PANEL:Init( )
 	self.betPanel:DockMargin( 5, 5, 5, 5 )
 
 	self.amountBtns = {}
-	for i = 1, 4 do
-		local btn = vgui.Create( "DButton", self.betPanel )
-		btn:Dock( TOP )
-		btn:SetTall( 30 )
-		btn:DockMargin( 5, 0, 5, 5 ) -- Lowered the margin for these buttons a bit to work/look better on lower resolutions
-		btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
-		hook.Add( "PS2_OnSettingsUpdate", btn, function( btn )
-			btn:SetText( Pointshop2.Gambling.BetAmounts[i] .. " points" )
-		end )
-		function btn.DoClick( )
-			self.Bet = Pointshop2.Gambling.BetAmounts[i]
-			self:OnBetChanged( )
-		end
-		function btn:Think( )
-			btn:SetDisabled( LocalPlayer().PS2_Wallet.points < Pointshop2.Gambling.BetAmounts[i] )
+	local function addBetButtons()
+		for i, amount in ipairs( Pointshop2.Gambling.BetAmounts ) do
+			local btn = vgui.Create( "DButton", self.betPanel )
+			btn:Dock( TOP )
+			btn:SetTall( 30 )
+			btn:DockMargin( 5, 0, 5, 5 ) -- Lowered the margin for these buttons a bit to work/look better on lower resolutions
+			btn:SetText( amount .. " points" )
+			function btn.DoClick( )
+				self.Bet = amount
+				self:OnBetChanged( )
+			end
+			function btn:Think( )
+				btn:SetDisabled( LocalPlayer().PS2_Wallet.points < amount )
+			end
 		end
 	end
+	hook.Add( "PS2_OnSettingsUpdate", self.betPanel, function( )
+		for k, v in pairs(self.betPanel:GetChildren()) do
+			v:Remove()
+		end
+
+		addBetButtons()
+	end )
+	addBetButtons()
 
 	self.betLabel = vgui.Create( "DLabel", self )
 	self.betLabel:SetText( "Bet :" )

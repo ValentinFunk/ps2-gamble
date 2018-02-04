@@ -43,15 +43,18 @@ local amounts = {
 }
 
 Pointshop2.Gambling.BetAmounts = {}
-hook.Add( "PS2_OnSettingsUpdate", "CalculateBetAmounts", function( )
+local function initBetAmounts() 
 	for k, v in pairs( amounts ) do
 		Pointshop2.Gambling.BetAmounts[k] = v * Pointshop2.GetSetting( "Pointshop 2 DLC", "GamblingSettings.BetMultiplier" )
 	end
-end )
+end
+hook.Add( "PS2_OnSettingsUpdate", "CalculateBetAmounts", initBetAmounts )
 
 if SERVER then
 	LibK.addContentFolder( "materials/slotmachine" )
 	resource.AddFile( "sound/slots_win.wav" )
+
+	Pointshop2.SettingsLoadedPromise:Done( initBetAmounts )
 end
 
 hook.Add( "PS2_ModulesLoaded", "DLC_GAMBLE", function( )
