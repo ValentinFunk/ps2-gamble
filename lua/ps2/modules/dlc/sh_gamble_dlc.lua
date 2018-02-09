@@ -51,9 +51,6 @@ end
 hook.Add( "PS2_OnSettingsUpdate", "CalculateBetAmounts", initBetAmounts )
 
 if SERVER then
-	LibK.addContentFolder( "materials/slotmachine" )
-	resource.AddFile( "sound/slots_win.wav" )
-
 	Pointshop2.SettingsLoadedPromise:Done( initBetAmounts )
 end
 
